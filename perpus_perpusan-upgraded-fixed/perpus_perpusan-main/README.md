@@ -1,4 +1,4 @@
-# 📚 Perpustakaan Digital
+# 📚 Perpustakaan Digidaw
 
 **Sistem Informasi Perpustakaan Buku Pelajaran SD – SMA**
 
