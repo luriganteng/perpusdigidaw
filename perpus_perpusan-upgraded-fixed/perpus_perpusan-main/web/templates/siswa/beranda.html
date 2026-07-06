@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% set use_shell = true %}
+{% set nav_role = "siswa" %}
+{% set nav_user = siswa.nama %}
+{% set page_icon = "🎒" %}
+{% set page_subtitle = "Siswa • Beranda" %}
+{% block content %}
+
+{# Warna spine buat ilustrasi rak & sampul buku, dipakai berulang dgn modulo #}
+{% set spine_colors = ["#E8A020", "#FFFFFF", "#C4841A", "#B9E0CA", "#7FA8C9", "#124530"] %}
+{% set cover_colors = ["#1E6B45", "#C4841A", "#2A5F8F", "#124530", "#E07B1A", "#1A3C5E"] %}
+
+<!-- Hero sapaan -->
+<div class="hero-siswa fade-up">
+  <div class="hero-inner">
+    <span class="eyebrow">{{ siswa.jenjang or '-' }} {{ siswa.kelas or '-' }}{% if siswa.nis %} • NIS {{ siswa.nis }}{% endif %}</span>
+    <h2>Halo, {{ siswa.nama.split(' ')[0] if siswa.nama else 'Siswa' }} 👋</h2>
+    <div class="hero-msg">
+      {% if stats.terlambat > 0 %}
+        Ada {{ stats.terlambat }} buku yang sudah lewat tenggat. Yuk segera dikembalikan ke perpustakaan.
+      {% elif stats.pinjam_aktif > 0 %}
+        Kamu lagi pinjam {{ stats.pinjam_aktif }} buku. Cek jadwal kembalinya biar gak kelewat tenggat.
+      {% else %}
+        Belum ada buku yang lagi dipinjam. Waktunya cari bacaan baru dari rak digital kita!
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Rak buku sepanjang lebar hero -->
+  <div class="hero-shelf" aria-hidden="true">
+    {% for i in range(28) %}
+      <i style="height:{{ 35 + (i * 13) % 60 }}%; background:{{ spine_colors[i % spine_colors|length] }};"></i>
+    {% endfor %}
+  </div>
+  <div class="hero-shelf-base"></div>
+</div>
+
+<div style="height:18px;"></div>
+
+<!-- Stat cepat -->
+<div class="stat-grid fade-up d1">
+  <div class="stat-card">
+    <div class="icon-circle">🔄</div>
+    <div>
+      <div class="stat-num">{{ stats.pinjam_aktif }}</div>
+      <div class="stat-label">Pinjaman Aktif</div>
+    </div>
+  </div>
+  <div class="stat-card {{ 'is-alert' if stats.terlambat > 0 }}">
+    <div class="icon-circle" style="{{ 'background:#FDECEA;color:var(--danger);' if stats.terlambat > 0 }}">⚠</div>
+    <div>
+      <div class="stat-num">{{ stats.terlambat }}</div>
+      <div class="stat-label">Terlambat</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="icon-circle">📋</div>
+    <div>
+      <div class="stat-num">{{ stats.total_riwayat }}</div>
+      <div class="stat-label">Total Riwayat</div>
+    </div>
+  </div>
+</div>
+
+<div style="height:18px;"></div>
+
+<div class="split-2 fade-up d2">
+  <!-- Buku yang segera jatuh tempo -->
+  <div class="card" style="border-radius:14px;">
+    <h3 style="margin:0 0 4px 0; font-size:16px;">⏳ Wajib Kembali Terdekat</h3>
+    {% if segera %}
+      <div class="muted" style="font-size:13px; margin-bottom:12px;">Buku ini paling dekat tenggat pengembaliannya.</div>
+      <div class="due-card">
+        <div class="book-cover" style="background:{{ cover_colors[(segera.judul|length) % cover_colors|length] }};">
+          {{ segera.judul[0]|upper if segera.judul else '?' }}
+        </div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:800;">{{ segera.judul }}</div>
+          <div class="muted" style="font-size:12.5px; margin-top:2px;">{{ segera.mata_pelajaran }}</div>
+          <div class="row" style="justify-content:space-between; margin-top:10px; gap:8px;">
+            <span class="badge" style="background:var(--siswa_soft); color:var(--siswa_d);">Dipinjam {{ segera.tgl_pinjam }}</span>
+            <span class="badge" style="background:#FDECEA; color:var(--danger);">Kembali {{ segera.tgl_kembali_rencana }}</span>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="muted" style="font-size:13.5px;">Belum ada buku yang sedang dipinjam. 🎉</div>
+    {% endif %}
+  </div>
+
+  <!-- Tips singkat -->
+  <div class="card" style="border-radius:14px;">
+    <h3 style="margin:0 0 12px 0; font-size:16px;">📌 Tips Pakai PerpusDigi</h3>
+    <ul class="tip-list">
+      <li><span class="icon-circle">🔍</span> Cari buku dengan filter jenjang, kelas, atau mapel</li>
+      <li><span class="icon-circle">📖</span> Klik <b>Pinjam</b> pada buku berstatus "Tersedia"</li>
+      <li><span class="icon-circle">📅</span> Setiap pinjaman wajib kembali dalam 30 hari</li>
+      <li><span class="icon-circle">🔄</span> Cek halaman Pinjaman Aktif biar gak kena telat</li>
+    </ul>
+  </div>
+</div>
+
+<div style="height:22px;"></div>
+
+<!-- Rekomendasi buku -->
+{% if rekomendasi %}
+<div class="fade-up d3">
+  <div class="section-heading">
+    <h3>📚 Rekomendasi Buat Kamu</h3>
+    <a class="link-more" href="/siswa/cari-buku">Lihat semua buku →</a>
+  </div>
+  <div class="book-grid">
+    {% for b in rekomendasi %}
+      <a class="book-card" href="/siswa/cari-buku?search={{ b.judul|urlencode }}">
+        <div class="book-cover" style="background:{{ cover_colors[loop.index0 % cover_colors|length] }};">
+          {{ b.judul[0]|upper if b.judul else '?' }}
+        </div>
+        <div style="min-width:0;">
+          <div class="book-title">{{ b.judul }}</div>
+          <div class="book-meta">{{ b.jenjang }} {{ b.kelas }} • {{ b.mata_pelajaran }}</div>
+          <span class="badge" style="background:var(--siswa_soft); color:var(--siswa_d);">{{ b.stok_tersedia }} tersedia</span>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+<div style="height:22px;"></div>
+{% endif %}
+
+<!-- Aksi cepat -->
+<div class="action-grid fade-up d3">
+  <a class="action-card primary" href="/siswa/cari-buku">
+    <span class="icon-circle">📖</span> Cari &amp; Pinjam Buku
+  </a>
+  <a class="action-card secondary" href="/siswa/pinjaman-aktif">
+    <span class="icon-circle">🔄</span> Lihat Pinjaman Aktif
+  </a>
+  <a class="action-card tertiary" href="/siswa/riwayat">
+    <span class="icon-circle">📋</span> Lihat Riwayat
+  </a>
+</div>
+
+{% endblock %}

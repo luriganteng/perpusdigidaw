@@ -1,0 +1,333 @@
+/* =========================================================
+   PerpusDigi — stylesheet
+   Tema: perpustakaan sekolah digital.
+   Palet: navy/emas untuk Admin, hijau/emas untuk Siswa.
+   ========================================================= */
+
+:root{
+  --bg:#F0F4F8;
+  --card:#FFFFFF;
+  --paper:#FBF8F1;
+  --sidebar:#1A3C5E;
+  --sidebar_h:#2A5F8F;
+  --siswa:#1E6B45;
+  --siswa_d:#124530;
+  --siswa_soft:#E7F3EC;
+  --accent:#E8A020;
+  --accent_d:#C4841A;
+  --text:#1C2B3A;
+  --muted:#6B7E8F;
+  --danger:#D94040;
+  --success:#2E9E5E;
+  --warning:#E07B1A;
+  --border:#D0DCE8;
+  --font-display: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;
+  --font-body: Segoe UI, Arial, sans-serif;
+  --shadow-sm: 0 1px 2px rgba(28,43,58,0.06);
+  --shadow-md: 0 8px 24px rgba(28,43,58,0.10);
+  --shadow-lg: 0 20px 48px rgba(28,43,58,0.16);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --sidebar-w: 240px;
+  --topbar-h: 60px;
+}
+*{ box-sizing:border-box; }
+body{ margin:0; font-family: var(--font-body); background:var(--bg); color:var(--text); }
+h1, h2, h3{ font-family: var(--font-display); letter-spacing:0.2px; }
+img{ max-width:100%; }
+
+/* -------------------- Topbar & shell -------------------- */
+.app-topbar, .topbar{
+  display:flex; align-items:center; gap:12px; padding:14px 18px;
+  background:var(--card); border-bottom:1px solid var(--border);
+  position:sticky; top:0; z-index:30;
+}
+.brand{ font-weight:800; color:var(--sidebar); font-family: var(--font-display); white-space:nowrap; }
+.topbar-subtitle{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.topbar-actions{ margin-left:auto; display:flex; gap:10px; align-items:center; flex-shrink:0; }
+
+.app-shell, .layout{ display:flex; min-height: calc(100vh - var(--topbar-h)); position:relative; }
+
+.hamburger{
+  display:none; flex-direction:column; justify-content:center; gap:4px;
+  width:34px; height:34px; border-radius:8px; border:1px solid var(--border);
+  background:var(--card); cursor:pointer; flex-shrink:0; padding:0;
+}
+.hamburger span{ display:block; width:16px; height:2px; background:var(--sidebar); margin:0 auto; border-radius:2px; }
+
+.sidebar{ width:var(--sidebar-w); flex-shrink:0; background:var(--sidebar); color:#fff; padding:0; }
+.sidebar.sidebar-siswa{ background:var(--siswa); }
+.sidebar .logo{ background:#12263D; padding:18px 16px; font-weight:800; color:var(--accent); }
+.sidebar.sidebar-siswa .logo{ background:var(--siswa_d); }
+.sidebar .user{ padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.12); font-size:13px; color:#AECDE0; }
+.sidebar.sidebar-siswa .user{ color:#A8D4BC; }
+.nav a{ display:block; padding:12px 16px; text-decoration:none; color:#AECDE0; border-left:4px solid transparent; }
+.sidebar.sidebar-siswa .nav a{ color:#A8D4BC; }
+.nav a:hover{ background:var(--sidebar_h); color:#fff; border-left-color:var(--accent); }
+.sidebar.sidebar-siswa .nav a:hover{ background:rgba(255,255,255,0.12); }
+.nav a.active{ background:var(--accent); color:var(--text); border-left-color:transparent; font-weight:700; }
+
+.sidebar-overlay{
+  display:none; position:fixed; inset:0; background:rgba(15,25,35,0.45); z-index:35;
+}
+
+.content{ flex:1; padding:18px; overflow:auto; min-width:0; }
+
+/* -------------------- Generic elements -------------------- */
+.card{ background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; }
+.flash{ padding:10px 12px; border-radius:10px; margin:0 18px 12px 18px; border:1px solid var(--border); }
+.flash.success{ background:#E8F5E9; border-color:#C8E0D4; }
+.flash.error{ background:#FDECEA; border-color:#FDECEA; }
+
+.table-wrap{ overflow:auto; }
+table{ width:100%; border-collapse:collapse; }
+th, td{ padding:10px; border-bottom:1px solid var(--border); text-align:left; font-size:14px; }
+th{ background:#F7FAFC; }
+
+.btn{ display:inline-block; padding:8px 12px; border:none; border-radius:8px; text-decoration:none; cursor:pointer; font-weight:700; transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease; white-space:nowrap; }
+.btn.primary{ background:var(--accent); color:var(--text); }
+.btn.primary:hover{ background:var(--accent_d); box-shadow: var(--shadow-sm); }
+.btn.secondary{ background:transparent; color:var(--sidebar); border:1px solid var(--border); }
+.btn.secondary:hover{ background:#F7FAFC; }
+.btn.danger{ background:var(--danger); color:#fff; }
+.btn.small{ padding:6px 10px; font-weight:700; font-size:13px; }
+
+.row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+
+input[type="text"], input[type="password"], select, textarea, input[type="number"]{
+  padding:9px 10px; border-radius:8px; border:1px solid var(--border); width:100%; box-sizing:border-box; font-size:14px;
+  font-family: var(--font-body); transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+input:focus, select:focus, textarea:focus{
+  outline:none; border-color: var(--sidebar_h); box-shadow: 0 0 0 3px rgba(42,95,143,0.15);
+}
+label{ display:block; font-size:13px; margin-bottom:6px; color:var(--muted); font-weight:700; }
+.muted{ color:var(--muted); }
+.flash-wrap{ margin-top:12px; }
+
+/* Aksesibilitas: outline fokus jelas buat navigasi keyboard */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible{
+  outline: 3px solid var(--accent); outline-offset:2px;
+}
+
+.eyebrow{
+  display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:800;
+  letter-spacing:1.2px; text-transform:uppercase; color:var(--sidebar);
+}
+.eyebrow.green{ color:var(--siswa); }
+.badge{
+  display:inline-block; padding:3px 10px; border-radius:999px; font-size:12px; font-weight:700;
+  background: var(--border); color: var(--text);
+}
+
+/* Motif rak buku */
+.shelf{ display:flex; align-items:flex-end; gap:5px; }
+.shelf i{ display:block; border-radius:4px 4px 2px 2px; box-shadow: var(--shadow-sm); flex-shrink:0; }
+.shelf-base{ height:6px; border-radius:3px; margin-top:-2px; }
+
+@keyframes fadeUp{
+  from{ opacity:0; transform: translateY(10px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+.fade-up{ animation: fadeUp 0.5s ease both; }
+.fade-up.d1{ animation-delay: 0.06s; }
+.fade-up.d2{ animation-delay: 0.12s; }
+.fade-up.d3{ animation-delay: 0.18s; }
+@media (prefers-reduced-motion: reduce){
+  .fade-up{ animation:none; }
+}
+
+/* =========================================================
+   Komponen beranda siswa
+   ========================================================= */
+
+.hero-siswa{
+  background: linear-gradient(135deg, var(--siswa) 0%, var(--siswa_d) 100%);
+  border-radius:18px; padding:28px 30px 0 30px; color:#fff; position:relative; overflow:hidden;
+}
+.hero-siswa .hero-inner{ position:relative; z-index:2; padding-bottom:26px; }
+.hero-siswa h2{ margin:8px 0 6px 0; color:#fff; font-size:27px; }
+.hero-siswa .hero-msg{ color:#CFE9DA; font-size:14px; max-width:480px; line-height:1.6; }
+.hero-siswa .eyebrow{ color:#B9E0CA; }
+
+.hero-shelf{
+  display:flex; align-items:flex-end; gap:3px; height:34px; position:relative; z-index:1;
+  padding:0 2px; opacity:0.95;
+}
+.hero-shelf i{ flex:1; min-width:4px; max-width:16px; border-radius:3px 3px 1px 1px; }
+.hero-shelf-base{ height:8px; background:rgba(0,0,0,0.18); }
+
+.stat-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:14px; }
+.stat-card{
+  background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px 16px;
+  display:flex; align-items:center; gap:12px;
+}
+.stat-card .icon-circle{ width:40px; height:40px; font-size:18px; }
+.stat-card .stat-num{ font-size:26px; font-weight:900; line-height:1.1; }
+.stat-card .stat-label{ font-size:12.5px; color:var(--muted); }
+.stat-card.is-alert{ border-color:#F3C6C6; background:#FFF7F6; }
+.stat-card.is-alert .stat-num{ color:var(--danger); }
+
+.icon-circle{
+  display:flex; align-items:center; justify-content:center; border-radius:50%;
+  background:var(--siswa_soft); color:var(--siswa_d); flex-shrink:0;
+}
+
+.split-2{ display:grid; grid-template-columns:1.3fr 1fr; gap:16px; align-items:stretch; }
+
+.due-card{
+  border:1px solid var(--border); border-radius:12px; padding:14px; background:var(--paper);
+  display:flex; gap:14px; align-items:flex-start;
+}
+.book-cover{
+  width:52px; height:70px; border-radius:6px 12px 12px 6px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-family:var(--font-display); font-weight:800; font-size:22px;
+  box-shadow: var(--shadow-sm), inset -4px 0 0 rgba(0,0,0,0.12);
+}
+
+.tip-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
+.tip-list li{ display:flex; gap:10px; align-items:flex-start; font-size:13.5px; line-height:1.5; color:var(--text); }
+.tip-list .icon-circle{ width:26px; height:26px; font-size:13px; margin-top:1px; }
+
+.section-heading{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin:0 0 12px 0; flex-wrap:wrap; }
+.section-heading h3{ margin:0; font-size:16px; }
+.section-heading .link-more{ font-size:13px; font-weight:700; color:var(--siswa); text-decoration:none; }
+.section-heading .link-more:hover{ text-decoration:underline; }
+
+.book-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(210px,1fr)); gap:14px; }
+.book-card{
+  display:flex; gap:12px; border:1px solid var(--border); border-radius:14px; padding:14px;
+  background:var(--card); text-decoration:none; color:inherit; transition: box-shadow .15s ease, transform .15s ease, border-color .15s ease;
+}
+.book-card:hover{ box-shadow:var(--shadow-md); transform:translateY(-2px); border-color:#C8E0D4; }
+.book-card .book-title{ font-weight:800; font-size:13.5px; line-height:1.3; }
+.book-card .book-meta{ font-size:11.5px; color:var(--muted); margin-top:3px; }
+.book-card .badge{ margin-top:8px; font-size:10.5px; padding:2px 8px; }
+
+.action-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:12px; }
+.action-card{
+  display:flex; align-items:center; gap:12px; padding:14px 16px; border-radius:14px;
+  text-decoration:none; color:#fff; font-weight:700; font-size:14px;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.action-card:hover{ transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.action-card .icon-circle{ background:rgba(255,255,255,0.22); color:#fff; width:36px; height:36px; font-size:16px; }
+.action-card.primary{ background:linear-gradient(135deg, var(--siswa) 0%, var(--siswa_d) 100%); }
+.action-card.secondary{ background:linear-gradient(135deg, var(--sidebar_h) 0%, var(--sidebar) 100%); }
+.action-card.tertiary{ background:linear-gradient(135deg, var(--accent) 0%, var(--accent_d) 100%); color:var(--text); }
+.action-card.tertiary .icon-circle{ background:rgba(0,0,0,0.12); color:var(--text); }
+
+/* =========================================================
+   Tab switcher login siswa (Masuk / Daftar)
+   ========================================================= */
+.siswa-tabswitch{
+  display:flex; gap:4px; background:rgba(255,255,255,0.65); border:1px solid var(--border);
+  border-radius:10px; padding:4px;
+}
+.siswa-tab-btn{
+  flex:1; border:none; background:transparent; padding:8px 10px; border-radius:7px;
+  font-weight:700; font-size:13px; color:var(--siswa_d); cursor:pointer;
+  font-family: var(--font-body); transition: background-color .12s ease, color .12s ease, box-shadow .12s ease;
+}
+.siswa-tab-btn.is-active{ background:var(--siswa); color:#fff; box-shadow: var(--shadow-sm); }
+.siswa-tab-btn:not(.is-active):hover{ background:rgba(30,107,69,0.10); }
+
+/* =========================================================
+   Admin theme — beranda, kartu statistik & tabel berwarna
+   ========================================================= */
+.content-admin .page-hero{
+  background: linear-gradient(135deg, var(--sidebar) 0%, #12263D 100%);
+  border-radius:18px; padding:24px 28px; color:#fff; margin-bottom:18px; position:relative; overflow:hidden;
+}
+.content-admin .page-hero::after{
+  content:""; position:absolute; right:-40px; top:-40px; width:160px; height:160px; border-radius:50%;
+  background:radial-gradient(circle, rgba(232,160,32,0.25) 0%, rgba(232,160,32,0) 70%);
+}
+.content-admin .page-hero h2{ color:#fff; margin:0 0 4px 0; font-size:23px; position:relative; z-index:1; }
+.content-admin .page-hero .muted{ color:#AECDE0; position:relative; z-index:1; }
+
+.admin-stat-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(155px,1fr)); gap:14px; }
+.admin-stat-card{
+  background:var(--card); border:1px solid var(--border); border-radius:14px; padding:15px 16px;
+  display:flex; align-items:center; gap:12px; position:relative; overflow:hidden;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.admin-stat-card:hover{ transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.admin-stat-card::before{
+  content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--tone-color, var(--sidebar));
+}
+.admin-stat-card .icon-circle{
+  width:42px; height:42px; font-size:19px; flex-shrink:0;
+  background:var(--tone-soft, #EAF1F8); color:var(--tone-color, var(--sidebar));
+}
+.admin-stat-card .stat-num{ font-size:25px; font-weight:900; line-height:1.1; color:var(--tone-color, var(--text)); }
+.admin-stat-card .stat-label{ font-size:12px; color:var(--muted); font-weight:700; }
+
+.admin-stat-card.tone-blue{ --tone-color:#2A5F8F; --tone-soft:#E4EEF7; }
+.admin-stat-card.tone-gold{ --tone-color:#C4841A; --tone-soft:#FBF0DC; }
+.admin-stat-card.tone-green{ --tone-color:#1E6B45; --tone-soft:#E7F3EC; }
+.admin-stat-card.tone-purple{ --tone-color:#6A4C93; --tone-soft:#EFE8F5; }
+.admin-stat-card.tone-teal{ --tone-color:#0E7C86; --tone-soft:#E1F1F2; }
+.admin-stat-card.tone-red{ --tone-color:#D94040; --tone-soft:#FDECEA; }
+
+.content-admin .card > h2:first-child,
+.content-admin .card > h3:first-child{
+  display:flex; align-items:center; gap:8px;
+}
+
+.content-admin table thead th{
+  background: linear-gradient(135deg, var(--sidebar) 0%, var(--sidebar_h) 100%);
+  color:#fff; font-weight:700; text-transform:uppercase; font-size:11px; letter-spacing:0.5px;
+  border-bottom:none; padding:11px 10px;
+}
+.content-admin table thead tr th:first-child{ border-radius:10px 0 0 0; }
+.content-admin table thead tr th:last-child{ border-radius:0 10px 0 0; }
+.content-admin table tbody tr{ transition: background-color .1s ease; }
+.content-admin table tbody tr:nth-child(even){ background:#F7FAFC; }
+.content-admin table tbody tr:hover{ background:#EAF1F8; }
+
+/* Badge berwarna untuk status/keterangan di tabel admin */
+.badge.tone-warning{ background:#FDEBD3; color:#9A5B0E; }
+.badge.tone-success{ background:#DFF3E6; color:#1E6B45; }
+.badge.tone-danger{ background:#FBE0E0; color:#B23030; }
+.badge.tone-info{ background:#E4EEF7; color:#2A5F8F; }
+.badge.tone-gold{ background:#FBF0DC; color:#9A5B0E; }
+.badge.tone-muted{ background:#EDF1F5; color:#5C6B7A; }
+
+.content-admin .progress-track{ background:var(--border); border-radius:6px; height:10px; overflow:hidden; }
+.content-admin .progress-fill{ height:100%; border-radius:6px; }
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+@media (max-width: 900px){
+  .hamburger{ display:flex; }
+  .app-shell, .layout{ min-height: calc(100vh - 56px); }
+  .sidebar{
+    position:fixed; top:var(--topbar-h); bottom:0; left:0; z-index:40;
+    transform:translateX(-102%); transition: transform .2s ease; box-shadow: var(--shadow-lg);
+    overflow-y:auto;
+  }
+  .sidebar.open{ transform:translateX(0); }
+  .sidebar-overlay.visible{ display:block; }
+  .content{ padding:14px; }
+  .topbar-subtitle{ display:none; }
+  .split-2{ grid-template-columns:1fr; }
+}
+
+@media (max-width: 640px){
+  .app-topbar, .topbar{ padding:10px 12px; }
+  th, td{ padding:7px 8px; font-size:12.5px; }
+  .hero-siswa{ padding:20px 18px 0 18px; border-radius:14px; }
+  .hero-siswa h2{ font-size:22px; }
+  .hero-shelf{ height:24px; }
+  .card{ padding:13px; border-radius:10px; }
+  .action-grid, .stat-grid{ grid-template-columns:1fr 1fr; }
+}
+
+@media (max-width: 420px){
+  .stat-grid{ grid-template-columns:1fr; }
+  .topbar-actions .btn span.label{ display:none; }
+}

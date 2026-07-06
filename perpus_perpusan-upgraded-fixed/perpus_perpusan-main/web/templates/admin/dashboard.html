@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% set use_shell = true %}
+{% set nav_role = "admin" %}
+{% set nav_user = admin.nama %}
+{% set page_subtitle = "Admin Dashboard" %}
+{% block content %}
+    <div class="page-hero fade-up">
+      <span class="eyebrow" style="color:#8FB6D8;">Panel Admin</span>
+      <h2>Selamat datang, {{ admin.nama }} 👋</h2>
+      <div class="muted">Perpustakaan Digital Sekolah — pantau koleksi &amp; peminjaman dari sini.</div>
+    </div>
+
+    <div class="admin-stat-grid">
+      <div class="admin-stat-card tone-blue">
+        <div class="icon-circle">📘</div>
+        <div>
+          <div class="stat-num">{{ stats.total_judul }}</div>
+          <div class="stat-label">Total Judul Buku</div>
+        </div>
+      </div>
+      <div class="admin-stat-card tone-teal">
+        <div class="icon-circle">📚</div>
+        <div>
+          <div class="stat-num">{{ stats.total_buku }}</div>
+          <div class="stat-label">Total Eksemplar</div>
+        </div>
+      </div>
+      <div class="admin-stat-card tone-purple">
+        <div class="icon-circle">🧑‍🎓</div>
+        <div>
+          <div class="stat-num">{{ stats.total_siswa }}</div>
+          <div class="stat-label">Siswa Terdaftar</div>
+        </div>
+      </div>
+      <div class="admin-stat-card tone-gold">
+        <div class="icon-circle">🔄</div>
+        <div>
+          <div class="stat-num">{{ stats.total_pinjam_aktif }}</div>
+          <div class="stat-label">Sedang Dipinjam</div>
+        </div>
+      </div>
+      <div class="admin-stat-card tone-green">
+        <div class="icon-circle">✅</div>
+        <div>
+          <div class="stat-num">{{ stats.total_dikembalikan }}</div>
+          <div class="stat-label">Sudah Dikembalikan</div>
+        </div>
+      </div>
+      <div class="admin-stat-card tone-red">
+        <div class="icon-circle">⚠️</div>
+        <div>
+          <div class="stat-num" style="color:var(--danger);">{{ stats.total_terlambat }}</div>
+          <div class="stat-label">Terlambat</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:18px;"></div>
+
+    <div class="row" style="gap:10px;">
+      <a class="btn secondary" href="/admin/siswa-meminjam">👥 Siswa Meminjam</a>
+      <a class="btn primary" href="/admin/buku">➕ Kelola Buku</a>
+    </div>
+
+    <div style="height:18px;"></div>
+
+    <div class="card">
+      <h3 style="margin:0 0 10px 0;">🕘 Peminjaman Terbaru</h3>
+      <div style="overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Siswa</th>
+              <th>NIS</th>
+              <th>Buku</th>
+              <th>Tgl Pinjam</th>
+              <th>Wajib Kembali</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in loans %}
+              <tr>
+                <td>{{ p.nama_siswa }}</td>
+                <td>{{ p.nis }}</td>
+                <td>{{ p.judul_buku }}</td>
+                <td>{{ p.tgl_pinjam }}</td>
+                <td>{{ p.tgl_kembali_rencana }}</td>
+                <td>
+                  {% if p.status == 'dipinjam' %}
+                    <span class="badge tone-warning">Dipinjam</span>
+                  {% else %}
+                    <span class="badge tone-success">Dikembalikan</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+            {% if loans|length == 0 %}
+              <tr><td colspan="6" class="muted">Belum ada data.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="height:18px;"></div>
+
+    <div class="card" style="{% if overdue and overdue|length > 0 %}border-color:#F3C6C6; background:#FFFBFA;{% endif %}">
+      <h3 style="margin:0 0 8px 0; color:var(--danger);">⚠ Keterlambatan Aktif</h3>
+      {% if overdue and overdue|length > 0 %}
+        <div class="muted" style="margin-bottom:10px;">({{ overdue|length }} buku)</div>
+        <div style="overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Siswa</th>
+                <th>NIS</th>
+                <th>Kelas</th>
+                <th>Buku</th>
+                <th>Wajib Kembali</th>
+                <th>Hari Terlambat</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in overdue %}
+                <tr>
+                  <td>{{ p.nama_siswa }}</td>
+                  <td>{{ p.nis }}</td>
+                  <td>{{ p.jenjang }} {{ p.kelas }}</td>
+                  <td>{{ p.judul_buku }}</td>
+                  <td>{{ p.tgl_kembali_rencana }}</td>
+                  <td><span class="badge tone-danger">{{ p.hari_terlambat }} hari</span></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="muted">🎉 Tidak ada keterlambatan.</div>
+      {% endif %}
+    </div>
+{% endblock %}
+

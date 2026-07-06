@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% set use_shell = true %}
+{% set nav_role = "admin" %}
+{% set nav_user = admin.nama %}
+{% set page_subtitle = "Admin • " ~ ('Edit' if buku else 'Tambah') ~ " Buku" %}
+{% set page_back_href = "/admin/buku" %}
+{% set page_back_label = "Kembali" %}
+{% block content %}
+    <div class="page-hero fade-up" style="padding:18px 24px;">
+      <span class="eyebrow" style="color:#8FB6D8;">Koleksi Buku</span>
+      <h2 style="font-size:20px;">{{ '✏️ Edit Buku' if buku else '➕ Tambah Buku' }}</h2>
+    </div>
+    <div class="card">
+
+      <form method="post" action="/admin/buku/save">
+        <input type="hidden" name="id" value="{{ buku.id if buku else '' }}">
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+          <div>
+            <label>ISBN</label>
+            <input type="text" name="isbn" value="{{ buku.isbn if buku and buku.isbn else '' }}">
+          </div>
+          <div>
+            <label>Judul *</label>
+            <input type="text" name="judul" value="{{ buku.judul if buku else '' }}" required>
+          </div>
+          <div>
+            <label>Pengarang *</label>
+            <input type="text" name="pengarang" value="{{ buku.pengarang if buku else '' }}" required>
+          </div>
+          <div>
+            <label>Penerbit</label>
+            <input type="text" name="penerbit" value="{{ buku.penerbit if buku and buku.penerbit else '' }}">
+          </div>
+          <div>
+            <label>Tahun Terbit</label>
+            <input type="text" name="tahun" value="{{ buku.tahun_terbit if buku and buku.tahun_terbit else '' }}">
+          </div>
+          <div>
+            <label>Stok *</label>
+            <input type="number" name="stok" value="{{ buku.stok if buku else 1 }}" min="1" required>
+          </div>
+        </div>
+
+        <div style="height:12px;"></div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+          <div>
+            <label>Jenjang *</label>
+            <select name="jenjang" required>
+              {% if buku and buku.jenjang %}
+                <option value="{{ buku.jenjang }}" selected>{{ buku.jenjang }}</option>
+              {% else %}
+                <option value="" selected disabled>Pilih jenjang</option>
+              {% endif %}
+              <option value="SD">SD</option>
+              <option value="SMP">SMP</option>
+              <option value="SMA">SMA</option>
+            </select>
+          </div>
+          <div>
+            <label>Kelas *</label>
+            <select name="kelas" required>
+              {% if buku and buku.kelas %}
+                <option value="{{ buku.kelas }}" selected>{{ buku.kelas }}</option>
+              {% else %}
+                <option value="" selected disabled>Pilih kelas</option>
+              {% endif %}
+              {% for k in range(1,13) %}
+                <option value="{{ k }}">{{ k }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div style="height:12px;"></div>
+
+        <div>
+          <label>Mata Pelajaran *</label>
+          <input type="text" name="mata_pelajaran" value="{{ buku.mata_pelajaran if buku else '' }}" required>
+          {% if buku %}{% endif %}
+        </div>
+
+        <div style="height:14px;"></div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;">
+          <a class="btn secondary" href="/admin/buku">Batal</a>
+          <button class="btn primary" type="submit">Simpan</button>
+        </div>
+      </form>
+    </div>
+{% endblock %}
+

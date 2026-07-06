@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% set use_shell = true %}
+{% set nav_role = "admin" %}
+{% set nav_user = admin.nama %}
+{% set page_subtitle = "Admin • " ~ ('Edit' if siswa else 'Tambah') ~ " Siswa" %}
+{% set page_back_href = "/admin/siswa" %}
+{% set page_back_label = "Kembali" %}
+{% block content %}
+    <div class="page-hero fade-up" style="padding:18px 24px;">
+      <span class="eyebrow" style="color:#8FB6D8;">Data Siswa</span>
+      <h2 style="font-size:20px;">{{ '✏️ Edit Siswa' if siswa else '➕ Tambah Siswa' }}</h2>
+    </div>
+    <div class="card">
+
+      <form method="post" action="/admin/siswa/save">
+        <input type="hidden" name="id" value="{{ siswa.id if siswa else '' }}">
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+          <div>
+            <label>Nama *</label>
+            <input type="text" name="nama" value="{{ siswa.nama if siswa else '' }}" required>
+          </div>
+          <div>
+            <label>NIS</label>
+            <input type="text" name="nis" value="{{ siswa.nis if siswa and siswa.nis else '' }}" placeholder="Opsional">
+          </div>
+          <div>
+            <label>Jenjang</label>
+            <select name="jenjang" id="jenjang-select">
+              <option value="-" {% if not siswa or siswa.jenjang=='-' %}selected{% endif %}>-</option>
+              {% for j in jenjang_map.keys() %}
+                <option value="{{ j }}" {% if siswa and siswa.jenjang==j %}selected{% endif %}>{{ j }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label>Kelas</label>
+            <select name="kelas" id="kelas-select">
+              <option value="-" {% if not siswa or siswa.kelas=='-' %}selected{% endif %}>-</option>
+              {% for j, kelas_list in jenjang_map.items() %}
+                {% for k in kelas_list %}
+                  <option value="{{ k }}" data-jenjang="{{ j }}" {% if siswa and siswa.kelas==k %}selected{% endif %}>{{ k }}</option>
+                {% endfor %}
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label>No. Telepon</label>
+            <input type="text" name="telepon" value="{{ siswa.telepon if siswa and siswa.telepon else '' }}" placeholder="Opsional">
+          </div>
+        </div>
+
+        <div style="height:14px;"></div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;">
+          <a class="btn secondary" href="/admin/siswa">Batal</a>
+          <button class="btn primary" type="submit">Simpan</button>
+        </div>
+      </form>
+    </div>
+
+<script>
+  // Filter opsi kelas biar cuma nampilin yang sesuai jenjang yang dipilih
+  (function () {
+    var jenjangSelect = document.getElementById('jenjang-select');
+    var kelasSelect = document.getElementById('kelas-select');
+    var kelasOptions = Array.prototype.slice.call(kelasSelect.options);
+
+    function applyFilter() {
+      var jenjang = jenjangSelect.value;
+      kelasOptions.forEach(function (opt) {
+        var optJenjang = opt.getAttribute('data-jenjang');
+        opt.hidden = !!optJenjang && optJenjang !== jenjang;
+      });
+    }
+
+    jenjangSelect.addEventListener('change', function () {
+      kelasSelect.value = '-';
+      applyFilter();
+    });
+    applyFilter();
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% set use_shell = true %}
+{% set nav_role = "admin" %}
+{% set nav_user = admin.nama %}
+{% set page_subtitle = "Admin • Manajemen Buku" %}
+{% set page_back_href = "/admin/dashboard" %}
+{% set page_back_label = "Dashboard" %}
+{% block content %}
+    <div class="page-hero fade-up">
+      <span class="eyebrow" style="color:#8FB6D8;">Koleksi Perpustakaan</span>
+      <h2>📖 Manajemen Buku</h2>
+      <div class="muted">Kelola judul, stok, dan penempatan jenjang/kelas buku pelajaran.</div>
+    </div>
+
+    <div class="card">
+      <form method="get" action="/admin/buku">
+        <div class="row" style="justify-content:space-between;">
+          <div style="flex:2; min-width:260px;">
+            <label>Search</label>
+            <input type="text" name="search" value="{{ search }}" placeholder="Cari judul/pengarang/...">
+          </div>
+          <div style="flex:1; min-width:160px;">
+            <label>Jenjang</label>
+            <select name="jenjang">
+              <option value="Semua" {% if jenjang=='Semua' %}selected{% endif %}>Semua</option>
+              {% for j in jenjang_options %}
+                <option value="{{ j }}" {% if jenjang==j %}selected{% endif %}>{{ j }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div style="flex:1; min-width:160px;">
+            <label>Kelas</label>
+            <select name="kelas">
+              <option value="Semua" {% if kelas=='Semua' %}selected{% endif %}>Semua</option>
+              {% for k in range(1,13) %}
+                <option value="{{ k }}" {% if kelas==(k|string) %}selected{% endif %}>{{ k }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div style="align-self:end;">
+            <button class="btn secondary" type="submit">Terapkan</button>
+          </div>
+          <div style="align-self:end;">
+            <a class="btn primary" href="/admin/buku/new">➕ Tambah Buku</a>
+          </div>
+        </div>
+      </form>
+
+      <div style="height:12px;"></div>
+
+      <div style="overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>ISBN</th>
+              <th>Judul</th>
+              <th>Pengarang</th>
+              <th>Jenjang</th>
+              <th>Kelas</th>
+              <th>Mata Pelajaran</th>
+              <th>Stok</th>
+              <th>Tersedia</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for b in buku_list %}
+              <tr>
+                <td>{{ b.id }}</td>
+                <td>{{ b.isbn or '-' }}</td>
+                <td>{{ b.judul }}</td>
+                <td>{{ b.pengarang }}</td>
+                <td>{{ b.jenjang }}</td>
+                <td>{{ b.kelas }}</td>
+                <td>{{ b.mata_pelajaran }}</td>
+                <td>{{ b.stok }}</td>
+                <td>
+                  {% if b.stok_tersedia==0 %}
+                    <span class="badge tone-danger">Habis</span>
+                  {% else %}
+                    <span class="badge tone-success">{{ b.stok_tersedia }} tersedia</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="row" style="gap:8px;">
+                    <a class="btn small secondary" href="/admin/buku/{{ b.id }}/edit">Edit</a>
+                    <form method="post" action="/admin/buku/delete" onsubmit="return confirm('Hapus buku: {{ b.judul }} ?');">
+                      <input type="hidden" name="id" value="{{ b.id }}">
+                      <button class="btn small danger" type="submit">Hapus</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+            {% if buku_list|length == 0 %}
+              <tr><td colspan="10" class="muted">Tidak ada data.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+{% endblock %}

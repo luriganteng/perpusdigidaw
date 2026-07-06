@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% set use_shell = true %}
+{% set nav_role = "admin" %}
+{% set nav_user = admin.nama %}
+{% set page_subtitle = "Admin • Keterlambatan" %}
+{% set page_back_href = "/admin/dashboard" %}
+{% set page_back_label = "Dashboard" %}
+{% block content %}
+    <div class="page-hero fade-up" style="background:linear-gradient(135deg, #B23030 0%, #7A1F1F 100%);">
+      <span class="eyebrow" style="color:#F5C7C7;">Perlu Perhatian</span>
+      <h2>⚠ Keterlambatan Aktif</h2>
+      <div class="muted" style="color:#F0C6C6;">Daftar buku yang belum dikembalikan dan sudah lewat tanggal wajib kembali.</div>
+    </div>
+
+    <div class="card">
+      {% if overdue and overdue|length > 0 %}
+        <div style="margin-bottom:12px;">
+          <span class="badge tone-danger">Total: {{ overdue|length }} buku terlambat</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Siswa</th>
+                <th>NIS</th>
+                <th>Kelas</th>
+                <th>Buku</th>
+                <th>Tgl Pinjam</th>
+                <th>Wajib Kembali</th>
+                <th>Hari Terlambat</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in overdue %}
+                <tr>
+                  <td>{{ p.nama_siswa }}</td>
+                  <td>{{ p.nis or '-' }}</td>
+                  <td>{{ p.kelas }}</td>
+                  <td>{{ p.judul_buku }}</td>
+                  <td>{{ p.tgl_pinjam }}</td>
+                  <td>{{ p.tgl_kembali_rencana }}</td>
+                  <td><span class="badge tone-danger">{{ p.hari_terlambat }} hari</span></td>
+                  <td>
+                    <form method="post" action="/admin/peminjaman/kembalikan" onsubmit="return confirm('Tandai buku ini sudah dikembalikan?');" style="margin:0;">
+                      <input type="hidden" name="peminjaman_id" value="{{ p.id }}">
+                      <button class="btn small primary" type="submit">Kembalikan</button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="muted">🎉 Tidak ada keterlambatan saat ini.</div>
+      {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% set use_shell = true %}
+{% set nav_role = "admin" %}
+{% set nav_user = admin.nama %}
+{% set page_subtitle = "Admin • Daftar Siswa Meminjam" %}
+{% set page_back_href = "/admin/dashboard" %}
+{% set page_back_label = "Dashboard" %}
+{% block content %}
+    <div class="page-hero fade-up">
+      <span class="eyebrow" style="color:#8FB6D8;">Aktivitas Peminjaman</span>
+      <h2>👥 Siswa yang Sedang Meminjam</h2>
+      <div class="muted">Admin bisa menghapus data peminjaman siswa (mengembalikan status secara paksa).</div>
+    </div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Siswa</th>
+              <th>NIS</th>
+              <th>Kelas</th>
+              <th>Judul Buku</th>
+              <th>Tgl Pinjam</th>
+              <th>Wajib Kembali</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if loans and loans|length > 0 %}
+              {% for p in loans %}
+                <tr>
+                  <td>{{ p.nama_siswa }}</td>
+                  <td>{{ p.nis }}</td>
+                  <td>{{ p.jenjang }} {{ p.kelas }}</td>
+                  <td>{{ p.judul_buku }}</td>
+                  <td>{{ p.tgl_pinjam }}</td>
+                  <td>{{ p.tgl_kembali_rencana }}</td>
+                  <td>
+                    {% if p.status=='dipinjam' %}
+                      <span class="badge tone-warning">Dipinjam</span>
+                    {% else %}
+                      <span class="badge tone-success">Dikembalikan</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <form method="post" action="/admin/siswa-meminjam/delete" onsubmit="return confirm('Hapus/pulihkan peminjaman untuk {{ p.nama_siswa }} - {{ p.judul_buku }} ?');">
+                      <input type="hidden" name="peminjaman_id" value="{{ p.id }}">
+                      <button class="btn small danger" type="submit">Hapus</button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr><td colspan="8" class="muted">Belum ada siswa yang sedang meminjam.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="muted" style="font-size:13px; margin-top:12px;">
+        Catatan: Penghapusan ini menggunakan method pada `PeminjamanModel`.
+      </div>
+    </div>
+{% endblock %}

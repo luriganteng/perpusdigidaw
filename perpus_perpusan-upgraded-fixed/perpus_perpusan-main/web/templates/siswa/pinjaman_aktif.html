@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% set use_shell = true %}
+{% set nav_role = "siswa" %}
+{% set nav_user = siswa.nama %}
+{% set page_icon = "🎒" %}
+{% set page_subtitle = "Siswa • Pinjaman Aktif" %}
+{% block content %}
+    <div class="card">
+      <h2 style="margin-top:0;">Pinjaman Aktif</h2>
+      {% if terlambat_count and terlambat_count > 0 %}
+        <div class="flash error" style="margin-top:10px;">⚠ Kamu punya {{ terlambat_count }} buku yang melewati tanggal pengembalian.</div>
+      {% endif %}
+
+      <div class="table-wrap" style="margin-top:10px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Judul</th>
+              <th>Mata Pelajaran</th>
+              <th>Jenjang</th>
+              <th>Tgl Pinjam</th>
+              <th>Wajib Kembali</th>
+              <th>Sisa</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if loans and loans|length > 0 %}
+              {% for p in loans %}
+                <tr>
+                  <td>{{ p.judul }}</td>
+                  <td>{{ p.mata_pelajaran }}</td>
+                  <td>{{ p.jenjang }}</td>
+                  <td>{{ p.tgl_pinjam }}</td>
+                  <td>{{ p.tgl_kembali_rencana }}</td>
+                  <td>{{ p.sisa_str }}</td>
+                  <td style="font-weight:900; color:
+                    {% if p.tag=='danger' %}var(--danger)
+                    {% elif p.tag=='warning' %}var(--warning)
+                    {% else %}var(--success)
+                    {% endif %};">{{ p.status_str }}</td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr><td colspan="7" class="muted">Belum ada pinjaman aktif.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="muted" style="margin-top:10px; font-size:13px;">Data diambil langsung dari SQLite. Refresh halaman untuk melihat pembaruan.</div>
+    </div>
+{% endblock %}
+

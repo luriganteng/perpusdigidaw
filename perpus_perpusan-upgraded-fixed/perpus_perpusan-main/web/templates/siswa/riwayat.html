@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% set use_shell = true %}
+{% set nav_role = "siswa" %}
+{% set nav_user = siswa.nama %}
+{% set page_icon = "🎒" %}
+{% set page_subtitle = "Siswa • Riwayat Pinjaman" %}
+{% block content %}
+    <div class="card">
+      <h2 style="margin-top:0;">Riwayat Pinjaman</h2>
+
+      <div class="table-wrap" style="margin-top:10px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Judul</th>
+              <th>Mata Pelajaran</th>
+              <th>Tgl Pinjam</th>
+              <th>Wajib Kembali</th>
+              <th>Tgl Dikembalikan</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if loans and loans|length > 0 %}
+              {% for p in loans %}
+                <tr>
+                  <td>{{ p.judul }}</td>
+                  <td>{{ p.mata_pelajaran }}</td>
+                  <td>{{ p.tgl_pinjam }}</td>
+                  <td>{{ p.tgl_kembali_rencana }}</td>
+                  <td>{{ p.tgl_kembali_aktual }}</td>
+                  <td style="font-weight:900; color:
+                    {% if p.tag=='danger' %}var(--danger)
+                    {% elif p.tag=='warning' %}var(--warning)
+                    {% else %}var(--success)
+                    {% endif %};">{{ p.status_str }}</td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr><td colspan="6" class="muted">Belum ada riwayat peminjaman.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="muted" style="margin-top:10px; font-size:13px;">Status dan tanggal ditarik real-time dari database.</div>
+    </div>
+{% endblock %}
+

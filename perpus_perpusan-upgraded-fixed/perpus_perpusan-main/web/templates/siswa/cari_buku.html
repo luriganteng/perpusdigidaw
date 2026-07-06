@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% set use_shell = true %}
+{% set nav_role = "siswa" %}
+{% set nav_user = siswa.nama %}
+{% set page_icon = "🎒" %}
+{% set page_subtitle = "Siswa • Cari & Pinjam Buku" %}
+{% block content %}
+    <div class="card">
+      <h2 style="margin-top:0;">Cari buku</h2>
+      <form method="get" action="/siswa/cari-buku">
+        <label>Search</label>
+        <input type="text" name="search" value="{{ search or '' }}" placeholder="Ketik judul/pengarang...">
+
+        <div style="height:10px;"></div>
+
+        <div class="row" style="gap:12px; align-items:flex-end;">
+          <div style="flex:1; min-width:160px;">
+            <label>Jenjang</label>
+            <select name="jenjang">
+              <option value="Semua" {% if jenjang=='Semua' %}selected{% endif %}>Semua</option>
+              {% for j in ['SD','SMP','SMA'] %}
+                <option value="{{ j }}" {% if jenjang==j %}selected{% endif %}>{{ j }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div style="flex:1; min-width:160px;">
+            <label>Kelas</label>
+            <select name="kelas">
+              <option value="Semua" {% if kelas=='Semua' %}selected{% endif %}>Semua</option>
+              {% if kelas_map and jenjang in kelas_map %}
+                {% for k in kelas_map.get(jenjang, []) %}
+                  <option value="{{ k }}" {% if kelas==k|string %}selected{% endif %}>{{ k }}</option>
+                {% endfor %}
+              {% endif %}
+            </select>
+          </div>
+          <div style="flex:1; min-width:200px;">
+            <label>Mapel</label>
+            <select name="mapel">
+              <option value="Semua" {% if mapel=='Semua' %}selected{% endif %}>Semua</option>
+              {% if mapel_map and jenjang in mapel_map %}
+                {% for m in mapel_map.get(jenjang, []) %}
+                  <option value="{{ m }}" {% if mapel==m %}selected{% endif %}>{{ m }}</option>
+                {% endfor %}
+              {% endif %}
+            </select>
+          </div>
+        </div>
+
+        <div style="height:12px;"></div>
+        <button class="btn primary" type="submit">Cari</button>
+      </form>
+
+      <div style="height:16px;"></div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Judul Buku</th>
+              <th>Pengarang</th>
+              <th>Jenjang</th>
+              <th>Kelas</th>
+              <th>Mata Pelajaran</th>
+              <th>Tersedia</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for b in buku_list %}
+              <tr>
+                <td>{{ b.id }}</td>
+                <td>{{ b.judul }}</td>
+                <td>{{ b.pengarang }}</td>
+                <td>{{ b.jenjang }}</td>
+                <td>{{ b.kelas }}</td>
+                <td>{{ b.mata_pelajaran }}</td>
+                <td>{{ b.stok_tersedia }}</td>
+                <td style="font-weight:900; color:
+                  {% if b.tag=='danger' %}var(--danger)
+                  {% elif b.tag=='warning' %}var(--warning)
+                  {% else %}var(--success)
+                  {% endif %};">{{ b.status }}</td>
+                <td>
+                  {% if b.bisa_pinjam %}
+                    <form method="post" action="/siswa/pinjam" style="margin:0;" onsubmit="return confirm('Pinjam buku \'{{ b.judul }}\'?');">
+                      <input type="hidden" name="buku_id" value="{{ b.id }}">
+                      <input type="hidden" name="search" value="{{ search or '' }}">
+                      <input type="hidden" name="jenjang" value="{{ jenjang }}">
+                      <input type="hidden" name="kelas" value="{{ kelas }}">
+                      <input type="hidden" name="mapel" value="{{ mapel }}">
+                      <button class="btn small primary" type="submit">📖 Pinjam</button>
+                    </form>
+                  {% else %}
+                    <span class="muted" style="font-size:12px;">-</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+            {% if buku_list|length == 0 %}
+              <tr><td colspan="9" class="muted">Tidak ada buku.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+{% endblock %}
+

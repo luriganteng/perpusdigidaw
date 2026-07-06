@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or "Perpustakaan Digital" }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-wrap">
+        {% for category, msg in messages %}
+          <div class="flash {{ category }}">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% if use_shell %}
+    <div class="app-topbar">
+      <button class="hamburger" id="navToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="sidebar">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="brand">{{ page_icon or '📚' }} PerpusDigi</div>
+      <div class="muted topbar-subtitle">{{ page_subtitle or '' }}</div>
+      <div class="topbar-actions">
+        {% if page_back_href %}
+          <a class="btn secondary" href="{{ page_back_href }}">← <span class="label">{{ page_back_label or 'Kembali' }}</span></a>
+        {% endif %}
+        <a class="btn secondary" href="/logout">⬅ <span class="label">Keluar</span></a>
+      </div>
+    </div>
+
+    <div class="app-shell">
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
+      <div class="sidebar {{ 'sidebar-siswa' if nav_role == 'siswa' else '' }}" id="sidebar">
+        <div class="logo">{{ page_icon or '📚' }} PerpusDigi</div>
+        <div class="user">👤 {{ nav_user or '' }}</div>
+        <div class="nav">
+          {% if nav_role == 'siswa' %}
+            <a href="/siswa/beranda" class="{{ 'active' if request.path == '/siswa/beranda' }}">🏠 Beranda</a>
+            <a href="/siswa/cari-buku" class="{{ 'active' if request.path == '/siswa/cari-buku' }}">📖 Cari &amp; Pinjam Buku</a>
+            <a href="/siswa/pinjaman-aktif" class="{{ 'active' if request.path == '/siswa/pinjaman-aktif' }}">🔄 Pinjaman Aktif</a>
+            <a href="/siswa/riwayat" class="{{ 'active' if request.path == '/siswa/riwayat' }}">📋 Riwayat Pinjaman</a>
+          {% else %}
+            <a href="/admin/dashboard" class="{{ 'active' if request.path == '/admin/dashboard' }}">🏠 Dashboard</a>
+            <a href="/admin/buku" class="{{ 'active' if request.path == '/admin/buku' or request.path.startswith('/admin/buku/') }}">📖 Daftar Buku</a>
+            <a href="/admin/siswa-meminjam" class="{{ 'active' if request.path == '/admin/siswa-meminjam' }}">👥 Siswa Meminjam</a>
+            <a href="/admin/siswa" class="{{ 'active' if request.path == '/admin/siswa' or request.path.startswith('/admin/siswa/') }}">🧑‍🎓 Data Siswa</a>
+            <a href="/admin/peminjaman" class="{{ 'active' if request.path == '/admin/peminjaman' }}">🔄 Peminjaman</a>
+            <a href="/admin/terlambat" class="{{ 'active' if request.path == '/admin/terlambat' }}">⏰ Keterlambatan</a>
+            <a href="/admin/laporan" class="{{ 'active' if request.path == '/admin/laporan' }}">📊 Laporan</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="content {{ 'content-siswa' if nav_role == 'siswa' else 'content-admin' }}">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  {% else %}
+    {% block body %}{% endblock %}
+  {% endif %}
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

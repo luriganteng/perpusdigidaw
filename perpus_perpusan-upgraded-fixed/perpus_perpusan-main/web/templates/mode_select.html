@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="topbar">
+  <div class="brand">📚 PerpusDigi</div>
+  <div class="muted">Perpustakaan Buku Pelajaran SD – SMA</div>
+</div>
+
+<div class="layout" style="justify-content:center; align-items:center; padding:32px 18px;">
+  <div style="max-width:1040px; width:100%;">
+
+    <div class="row" style="align-items:stretch; gap:0; border-radius:20px; overflow:hidden; box-shadow: var(--shadow-lg);">
+
+      <!-- Panel kiri: identitas & motif rak buku -->
+      <div class="fade-up" style="flex:1; min-width:300px; background: linear-gradient(160deg, var(--sidebar) 0%, #12263D 100%); color:#fff; padding:40px 34px; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <span class="eyebrow" style="color:#8FB6D8;">Perpustakaan Digital Sekolah</span>
+          <h1 style="margin:10px 0 0 0; font-size:34px; line-height:1.15; color:#fff;">Satu rak,<br>semua kelas.</h1>
+          <p style="color:#AECDE0; font-size:14.5px; line-height:1.6; max-width:340px; margin-top:14px;">
+            Cari, pinjam, dan pantau buku pelajaran dari kelas 1 SD sampai kelas 12 SMA — semuanya lewat satu tempat.
+          </p>
+        </div>
+
+        <!-- Signature: rak buku ilustrasi CSS -->
+        <div style="margin-top:36px;">
+          <div class="shelf" style="height:74px;">
+            <i style="width:12px; height:78%; background:var(--accent);"></i>
+            <i style="width:9px; height:55%; background:#5C8AB0;"></i>
+            <i style="width:14px; height:92%; background:var(--siswa);"></i>
+            <i style="width:8px; height:40%; background:#F0F4F8;"></i>
+            <i style="width:11px; height:68%; background:var(--accent_d);"></i>
+            <i style="width:9px; height:82%; background:#7FA8C9;"></i>
+            <i style="width:13px; height:50%; background:var(--siswa_soft);"></i>
+            <i style="width:10px; height:74%; background:var(--accent);"></i>
+            <i style="width:12px; height:62%; background:#5C8AB0;"></i>
+            <i style="width:9px; height:88%; background:var(--siswa);"></i>
+            <i style="width:15px; height:45%; background:#F0F4F8;"></i>
+            <i style="width:10px; height:70%; background:var(--accent_d);"></i>
+          </div>
+          <div class="shelf-base" style="background:#0E1E30;"></div>
+          <div class="muted" style="color:#7194AC; font-size:12px; margin-top:10px;">
+            📖 Ribuan buku pelajaran, tersusun rapi per jenjang &amp; mata pelajaran.
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel kanan: form login -->
+      <div style="flex:1.15; min-width:340px; background:var(--card); padding:36px 34px;">
+        <h2 style="margin:0 0 4px 0; font-size:22px;">Masuk ke akun kamu</h2>
+        <div class="muted" style="font-size:13.5px; margin-bottom:22px;">Pilih peran sesuai posisi kamu di sekolah.</div>
+
+        <div class="row" style="gap:16px; align-items:stretch;">
+
+          <!-- ============ ADMIN ============ -->
+          <form method="post" action="/login/admin" class="fade-up d1" style="flex:1; min-width:250px;">
+            <div class="card" style="height:100%; border-radius:14px; padding:20px; display:flex; flex-direction:column;">
+              <div class="row" style="gap:10px; margin-bottom:2px;">
+                <div style="width:38px; height:38px; border-radius:10px; background:#EAF1F8; display:flex; align-items:center; justify-content:center; font-size:18px;">🏫</div>
+                <div>
+                  <h3 style="margin:0; font-size:16px;">Admin</h3>
+                  <div class="muted" style="font-size:12.5px;">Kelola buku &amp; siswa</div>
+                </div>
+              </div>
+
+              <div style="height:14px;"></div>
+
+              <div style="margin-bottom:10px;">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="admin" required autocomplete="username">
+              </div>
+              <div style="margin-bottom:4px;">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+              </div>
+
+              <div style="flex:1;"></div>
+              <button class="btn primary" style="margin-top:16px; width:100%;" type="submit">Masuk sebagai Admin</button>
+              <div class="muted" style="font-size:12px; margin-top:9px; text-align:center;">Default: admin / admin123</div>
+            </div>
+          </form>
+
+          <!-- ============ SISWA (tab Masuk / Daftar) ============ -->
+          <div class="fade-up d2" style="flex:1.25; min-width:280px;">
+            <div class="card" style="height:100%; border-radius:14px; padding:20px; border-color:#C8E0D4; background:var(--siswa_soft); display:flex; flex-direction:column;">
+
+              <div class="row" style="gap:10px; margin-bottom:2px;">
+                <div style="width:38px; height:38px; border-radius:10px; background:#fff; display:flex; align-items:center; justify-content:center; font-size:18px;">🎒</div>
+                <div>
+                  <h3 style="margin:0; font-size:16px; color:var(--siswa_d);">Siswa</h3>
+                  <div class="muted" style="font-size:12.5px;">Cari &amp; pinjam buku</div>
+                </div>
+              </div>
+
+              <div style="height:14px;"></div>
+
+              <!-- Tab switcher -->
+              <div class="siswa-tabswitch" role="tablist">
+                <button type="button" class="siswa-tab-btn" data-tab="siswa-masuk" id="btn-siswa-masuk" role="tab">Masuk</button>
+                <button type="button" class="siswa-tab-btn" data-tab="siswa-daftar" id="btn-siswa-daftar" role="tab">Daftar</button>
+              </div>
+
+              <div style="height:14px;"></div>
+
+              <!-- ---- Tab: Masuk (signin) ---- -->
+              <div class="siswa-tab-panel" id="panel-siswa-masuk">
+                <form method="post" action="/login/siswa">
+                  <div style="margin-bottom:10px;">
+                    <label>Nama Lengkap</label>
+                    <input type="text" name="nama" placeholder="Tulis nama kamu" required autocomplete="name">
+                  </div>
+                  <div style="margin-bottom:4px;">
+                    <label>NIS</label>
+                    <input type="text" name="nis" placeholder="Nomor Induk Siswa" required autocomplete="off" inputmode="numeric">
+                  </div>
+
+                  <button class="btn primary" style="margin-top:16px; width:100%; background:var(--siswa); color:#fff;" type="submit">Masuk sebagai Siswa</button>
+                  <div class="muted" style="font-size:12px; margin-top:9px; text-align:center;">
+                    Belum punya akun? Klik tab <b>Daftar</b> di atas.
+                  </div>
+                </form>
+              </div>
+
+              <!-- ---- Tab: Daftar (signup) ---- -->
+              <div class="siswa-tab-panel" id="panel-siswa-daftar" style="display:none;">
+                <form method="post" action="/daftar/siswa">
+                  <div style="margin-bottom:10px;">
+                    <label>Nama Lengkap</label>
+                    <input type="text" name="nama" placeholder="Tulis nama kamu" required autocomplete="name">
+                  </div>
+                  <div style="margin-bottom:10px;">
+                    <label>NIS</label>
+                    <input type="text" name="nis" placeholder="Nomor Induk Siswa" required autocomplete="off" inputmode="numeric">
+                  </div>
+
+                  <div class="row" style="gap:10px; margin-bottom:10px;">
+                    <div style="flex:1; min-width:0;">
+                      <label>Jenjang</label>
+                      <select name="jenjang" id="daftar-jenjang" required>
+                        <option value="" selected disabled>Pilih</option>
+                        {% for j in jenjang_map.keys() %}
+                          <option value="{{ j }}">{{ j }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div style="flex:1; min-width:0;">
+                      <label>Kelas</label>
+                      <select name="kelas" id="daftar-kelas" required>
+                        <option value="" selected disabled>Pilih jenjang dulu</option>
+                        {% for j, kelas_list in jenjang_map.items() %}
+                          {% for k in kelas_list %}
+                            <option value="{{ k }}" data-jenjang="{{ j }}" hidden>{{ k }}</option>
+                          {% endfor %}
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div style="margin-bottom:4px;">
+                    <label>No. Telepon</label>
+                    <input type="text" name="telepon" placeholder="08xxxxxxxxxx" required autocomplete="tel" inputmode="tel">
+                  </div>
+
+                  <button class="btn primary" style="margin-top:16px; width:100%; background:var(--siswa); color:#fff;" type="submit">Daftar &amp; Masuk</button>
+                  <div class="muted" style="font-size:12px; margin-top:9px; text-align:center;">
+                    Sudah punya akun? Klik tab <b>Masuk</b> di atas.
+                  </div>
+                </form>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  (function () {
+    var active = {{ active_tab|tojson }};
+
+    var btnMasuk = document.getElementById('btn-siswa-masuk');
+    var btnDaftar = document.getElementById('btn-siswa-daftar');
+    var panelMasuk = document.getElementById('panel-siswa-masuk');
+    var panelDaftar = document.getElementById('panel-siswa-daftar');
+
+    function showTab(tab) {
+      var isDaftar = tab === 'siswa-daftar';
+      panelMasuk.style.display = isDaftar ? 'none' : 'block';
+      panelDaftar.style.display = isDaftar ? 'block' : 'none';
+      btnMasuk.classList.toggle('is-active', !isDaftar);
+      btnDaftar.classList.toggle('is-active', isDaftar);
+    }
+
+    btnMasuk.addEventListener('click', function () { showTab('siswa-masuk'); });
+    btnDaftar.addEventListener('click', function () { showTab('siswa-daftar'); });
+
+    showTab(active === 'siswa-daftar' ? 'siswa-daftar' : 'siswa-masuk');
+
+    // Filter opsi kelas sesuai jenjang yang dipilih (sama seperti form admin)
+    var jenjangSelect = document.getElementById('daftar-jenjang');
+    var kelasSelect = document.getElementById('daftar-kelas');
+    var kelasOptions = Array.prototype.slice.call(kelasSelect.options);
+
+    jenjangSelect.addEventListener('change', function () {
+      var jenjang = jenjangSelect.value;
+      kelasOptions.forEach(function (opt) {
+        var optJenjang = opt.getAttribute('data-jenjang');
+        if (!optJenjang) { return; }
+        opt.hidden = optJenjang !== jenjang;
+      });
+      kelasSelect.value = '';
+    });
+  })();
+</script>
+{% endblock %}

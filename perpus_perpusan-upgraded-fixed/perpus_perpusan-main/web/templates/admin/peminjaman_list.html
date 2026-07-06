@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% set use_shell = true %}
+{% set nav_role = "admin" %}
+{% set nav_user = admin.nama %}
+{% set page_subtitle = "Admin • Peminjaman" %}
+{% set page_back_href = "/admin/dashboard" %}
+{% set page_back_label = "Dashboard" %}
+{% block content %}
+    <div class="page-hero fade-up">
+      <span class="eyebrow" style="color:#8FB6D8;">Riwayat Transaksi</span>
+      <h2>🔄 Riwayat Peminjaman</h2>
+      <div class="muted">Semua transaksi peminjaman, baik yang masih dipinjam maupun sudah dikembalikan.</div>
+    </div>
+
+    <div class="card">
+      <form method="get" action="/admin/peminjaman">
+        <div class="row" style="justify-content:space-between;">
+          <div style="flex:2; min-width:260px;">
+            <label>Search</label>
+            <input type="text" name="search" value="{{ search }}" placeholder="Cari nama siswa / NIS / judul buku...">
+          </div>
+          <div style="flex:1; min-width:160px;">
+            <label>Status</label>
+            <select name="status">
+              <option value="Semua" {% if status=='Semua' %}selected{% endif %}>Semua</option>
+              <option value="dipinjam" {% if status=='dipinjam' %}selected{% endif %}>Dipinjam</option>
+              <option value="dikembalikan" {% if status=='dikembalikan' %}selected{% endif %}>Dikembalikan</option>
+            </select>
+          </div>
+          <div style="align-self:end;">
+            <button class="btn secondary" type="submit">Terapkan</button>
+          </div>
+        </div>
+      </form>
+
+      <div style="height:12px;"></div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Siswa</th>
+              <th>NIS</th>
+              <th>Buku</th>
+              <th>Tgl Pinjam</th>
+              <th>Wajib Kembali</th>
+              <th>Tgl Kembali Aktual</th>
+              <th>Status</th>
+              <th>Diproses Oleh</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in loans %}
+              <tr>
+                <td>{{ p.nama_siswa }}</td>
+                <td>{{ p.nis or '-' }}</td>
+                <td>{{ p.judul_buku }}</td>
+                <td>{{ p.tgl_pinjam }}</td>
+                <td>{{ p.tgl_kembali_rencana }}</td>
+                <td>{{ p.tgl_kembali_aktual or '-' }}</td>
+                <td>
+                  {% if p.status=='dipinjam' %}
+                    <span class="badge tone-warning">Dipinjam</span>
+                  {% else %}
+                    <span class="badge tone-success">Dikembalikan</span>
+                  {% endif %}
+                </td>
+                <td>{{ p.nama_admin or '-' }}</td>
+                <td>
+                  {% if p.status == 'dipinjam' %}
+                    <form method="post" action="/admin/peminjaman/kembalikan" onsubmit="return confirm('Tandai buku ini sudah dikembalikan?');" style="margin:0;">
+                      <input type="hidden" name="peminjaman_id" value="{{ p.id }}">
+                      <button class="btn small primary" type="submit">Kembalikan</button>
+                    </form>
+                  {% else %}
+                    <span class="muted" style="font-size:12px;">-</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+            {% if loans|length == 0 %}
+              <tr><td colspan="9" class="muted">Tidak ada data peminjaman.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+{% endblock %}

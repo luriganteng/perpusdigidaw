@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% set use_shell = true %}
+{% set nav_role = "admin" %}
+{% set nav_user = admin.nama %}
+{% set page_subtitle = "Admin • Data Siswa" %}
+{% set page_back_href = "/admin/dashboard" %}
+{% set page_back_label = "Dashboard" %}
+{% block content %}
+    <div class="page-hero fade-up">
+      <span class="eyebrow" style="color:#8FB6D8;">Manajemen Anggota</span>
+      <h2>🧑‍🎓 Data Siswa</h2>
+      <div class="muted">Siswa yang daftar sendiri lewat login (mandiri) juga muncul di sini.</div>
+    </div>
+
+    <div class="card">
+      <form method="get" action="/admin/siswa">
+        <div class="row" style="justify-content:space-between;">
+          <div style="flex:2; min-width:260px;">
+            <label>Search</label>
+            <input type="text" name="search" value="{{ search }}" placeholder="Cari nama / NIS...">
+          </div>
+          <div style="align-self:end;">
+            <button class="btn secondary" type="submit">Cari</button>
+          </div>
+          <div style="align-self:end;">
+            <a class="btn primary" href="/admin/siswa/new">➕ Tambah Siswa</a>
+          </div>
+        </div>
+      </form>
+
+      <div style="height:12px;"></div>
+
+      <div style="overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>NIS</th>
+              <th>Nama</th>
+              <th>Jenjang</th>
+              <th>Kelas</th>
+              <th>Telepon</th>
+              <th>Asal</th>
+              <th>Pinjam Aktif</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in siswa_list %}
+              <tr>
+                <td>{{ s.id }}</td>
+                <td>{{ s.nis or '-' }}</td>
+                <td>{{ s.nama }}</td>
+                <td>{{ s.jenjang or '-' }}</td>
+                <td>{{ s.kelas or '-' }}</td>
+                <td>{{ s.telepon or '-' }}</td>
+                <td>
+                  {% if s.auto_registered %}
+                    <span class="badge tone-info">Mandiri</span>
+                  {% else %}
+                    <span class="badge tone-muted">Admin</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if s.pinjam_aktif and s.pinjam_aktif > 0 %}
+                    <span class="badge tone-warning">{{ s.pinjam_aktif }} buku</span>
+                  {% else %}
+                    <span class="badge tone-muted">0</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="row" style="gap:8px;">
+                    <a class="btn small secondary" href="/admin/siswa/{{ s.id }}/edit">Edit</a>
+                    <form method="post" action="/admin/siswa/delete" onsubmit="return confirm('Hapus siswa: {{ s.nama }} ?');" style="margin:0;">
+                      <input type="hidden" name="id" value="{{ s.id }}">
+                      <button class="btn small danger" type="submit">Hapus</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+            {% if siswa_list|length == 0 %}
+              <tr><td colspan="9" class="muted">Tidak ada data siswa.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="muted" style="font-size:13px; margin-top:12px;">
+        Catatan: siswa dengan peminjaman aktif tidak bisa dihapus sampai buku dikembalikan.
+      </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% set use_shell = true %}
+{% set nav_role = "admin" %}
+{% set nav_user = admin.nama %}
+{% set page_subtitle = "Admin • Laporan" %}
+{% set page_back_href = "/admin/dashboard" %}
+{% set page_back_label = "Dashboard" %}
+{% block content %}
+    <div class="page-hero fade-up">
+      <span class="eyebrow" style="color:#8FB6D8;">Insight Perpustakaan</span>
+      <h2>📊 Laporan &amp; Statistik</h2>
+      <div class="muted">Ringkasan performa koleksi buku dan aktivitas peminjaman.</div>
+    </div>
+
+    <div class="admin-stat-grid">
+      <div class="admin-stat-card tone-blue">
+        <div class="icon-circle">📘</div>
+        <div>
+          <div class="stat-num">{{ stats.total_judul }}</div>
+          <div class="stat-label">Total Judul Buku</div>
+        </div>
+      </div>
+      <div class="admin-stat-card tone-teal">
+        <div class="icon-circle">📚</div>
+        <div>
+          <div class="stat-num">{{ stats.total_buku }}</div>
+          <div class="stat-label">Total Eksemplar</div>
+        </div>
+      </div>
+      <div class="admin-stat-card tone-purple">
+        <div class="icon-circle">🧑‍🎓</div>
+        <div>
+          <div class="stat-num">{{ stats.total_siswa }}</div>
+          <div class="stat-label">Siswa Terdaftar</div>
+        </div>
+      </div>
+      <div class="admin-stat-card tone-green">
+        <div class="icon-circle">🙋</div>
+        <div>
+          <div class="stat-num">{{ stats.total_siswa_mandiri }}</div>
+          <div class="stat-label">Siswa Mandiri</div>
+        </div>
+      </div>
+      <div class="admin-stat-card tone-gold">
+        <div class="icon-circle">🔄</div>
+        <div>
+          <div class="stat-num">{{ stats.total_pinjam_aktif }}</div>
+          <div class="stat-label">Dipinjam Aktif</div>
+        </div>
+      </div>
+      <div class="admin-stat-card tone-red">
+        <div class="icon-circle">⚠️</div>
+        <div>
+          <div class="stat-num" style="color:var(--danger);">{{ stats.total_terlambat }}</div>
+          <div class="stat-label">Terlambat</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:22px;"></div>
+
+    <div class="split-2" style="align-items:stretch;">
+      <div class="card" style="min-width:0;">
+        <h3 style="margin-top:0;">🏆 Buku Terpopuler</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Judul</th>
+                <th>Jenjang</th>
+                <th>Mapel</th>
+                <th>Dipinjam</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for b in terpopuler %}
+                <tr>
+                  <td>{{ b.judul }}</td>
+                  <td>{{ b.jenjang }} {{ b.kelas }}</td>
+                  <td>{{ b.mata_pelajaran }}</td>
+                  <td><span class="badge tone-gold">{{ b.jumlah_dipinjam }}x</span></td>
+                </tr>
+              {% endfor %}
+              {% if terpopuler|length == 0 %}
+                <tr><td colspan="4" class="muted">Belum ada data peminjaman.</td></tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="min-width:0;">
+        <h3 style="margin-top:0;">🎓 Distribusi Peminjaman per Jenjang</h3>
+        {% set max_jumlah = (distribusi|map(attribute='jumlah')|max) if distribusi and distribusi|length > 0 else 0 %}
+        {% for d in distribusi %}
+          <div style="margin-bottom:12px;">
+            <div class="row" style="justify-content:space-between;">
+              <span style="font-weight:700;">{{ d.jenjang }}</span>
+              <span class="muted">{{ d.jumlah }} peminjaman</span>
+            </div>
+            <div class="progress-track" style="margin-top:4px;">
+              <div class="progress-fill" style="background:linear-gradient(90deg, var(--accent) 0%, var(--accent_d) 100%); width:{{ ((d.jumlah / max_jumlah * 100) if max_jumlah > 0 else 0)|round(1) }}%;"></div>
+            </div>
+          </div>
+        {% endfor %}
+        {% if distribusi|length == 0 %}
+          <div class="muted">Belum ada data.</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div style="height:22px;"></div>
+
+    <div class="card">
+      <h3 style="margin-top:0;">📅 Peminjaman per Bulan (12 bulan terakhir)</h3>
+      {% set max_bulan = (per_bulan|map(attribute='jumlah')|max) if per_bulan and per_bulan|length > 0 else 0 %}
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Bulan</th>
+              <th>Jumlah Peminjaman</th>
+              <th style="width:50%;">Grafik</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for m in per_bulan %}
+              <tr>
+                <td>{{ m.bulan }}</td>
+                <td style="font-weight:900;">{{ m.jumlah }}</td>
+                <td>
+                  <div class="progress-track">
+                    <div class="progress-fill" style="background:linear-gradient(90deg, var(--sidebar_h) 0%, var(--sidebar) 100%); width:{{ ((m.jumlah / max_bulan * 100) if max_bulan > 0 else 0)|round(1) }}%;"></div>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+            {% if per_bulan|length == 0 %}
+              <tr><td colspan="3" class="muted">Belum ada data.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+{% endblock %}
