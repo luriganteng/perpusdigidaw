@@ -1,67 +1,100 @@
-# Perpustakaan Digital 📚
-**Sistem Manajemen Perpustakaan Buku Pelajaran SD – SMA**
+# 📚 Perpustakaan Digital
+
+**Sistem Informasi Perpustakaan Buku Pelajaran SD – SMA**
 
 ---
 
-## Fitur
-- 🔐 Login admin
-- 📖 Manajemen buku (tambah, edit, hapus, filter per jenjang/kelas)
-- 👥 Manajemen siswa (tambah, edit, hapus, riwayat pinjam)
-- 🔄 Peminjaman & pengembalian buku (batas 30 hari)
-- ⏰ Monitor keterlambatan
-- 📊 Laporan & statistik
+# 🔗 Fitur
 
-## Cara Menjalankan
+### 👨‍💼 Admin
+- 🔐 Login Admin
+- 📚 Manajemen Data Buku
+- 👨‍🎓 Manajemen Data Siswa
+- 🔄 Peminjaman Buku
+- 📥 Pengembalian Buku
+- ⏰ Monitor Keterlambatan
+- 📊 Laporan & Statistik
 
-### 1. Pastikan Python 3.8+ terinstall
+### 👨‍🎓 Siswa
+- 👤 Login Siswa
+- 🏠 Dashboard Siswa
+- 📖 Beranda
+- 🔍 Cari Buku
+- 📚 Pinjaman Aktif
+- 📜 Riwayat Peminjaman
+
+### 🌐 Web Interface
+- 💻 Tampilan berbasis Web
+- 📱 Responsive Design
+- 🎨 HTML, CSS & JavaScript
+
+---
+
+# 🔗 Teknologi
+
+- 🐍 Python 3.8+
+- 🖼️ Tkinter
+- 🗄️ SQLite3
+- 🌐 HTML
+- 🎨 CSS
+- ⚡ JavaScript
+
+---
+
+# 🔗 Struktur Project
+
+```
+perpus_perpusan-main
+│
+├── main.py
+├── web_app.py
+├── models/
+├── views/
+├── web/
+│   ├── templates/
+│   └── static/
+├── perpustakaan.db
+└── seed_data.py
+```
+
+---
+
+# 🔗 Cara Menjalankan
+
+## 1. Pastikan Python 3.8 atau lebih baru sudah terinstall
+
 ```bash
 python --version
 ```
 
-### 2. Tidak perlu install library tambahan
-Program menggunakan:
-- `tkinter` (bawaan Python)
-- `sqlite3` (bawaan Python)
+## 2. Tidak perlu install library tambahan
 
-### 3. Jalankan program
+Project ini menggunakan:
+
+- tkinter (bawaan Python)
+- sqlite3 (bawaan Python)
+
+## 3. Jalankan aplikasi Desktop
+
 ```bash
 python main.py
 ```
 
-### 4. (Opsional) Load data contoh
+Atau jalankan versi Web
+
 ```bash
-python seed_data.py
-python main.py
+python web_app.py
 ```
+---
 
-## Login Default
-| Username | Password |
-|----------|----------|
-| admin    | admin123 |
+# 👨‍💻 Developer
 
-## Struktur Folder
-```
-perpustakaan_digital/
-├── main.py                  ← Entry point
-├── seed_data.py             ← Data contoh (opsional)
-├── perpustakaan.db          ← Database SQLite (auto-dibuat)
-├── models/
-│   └── database.py          ← Model OOP + koneksi DB
-└── views/
-    ├── login_view.py        ← Halaman login
-    ├── main_view.py         ← Dashboard & navigasi
-    ├── widgets.py           ← Komponen UI reusable
-    ├── dashboard_page.py    ← Halaman utama
-    ├── buku_page.py         ← Manajemen buku
-    ├── siswa_page.py        ← Manajemen siswa
-    ├── peminjaman_page.py   ← Peminjaman buku
-    ├── terlambat_page.py    ← Keterlambatan & laporan
-    └── laporan_page.py      ← Re-export laporan
-```
 
-## Jenjang & Kelas yang Didukung
-| Jenjang | Kelas |
-|---------|-------|
-| SD      | 1 – 6 |
-| SMP     | 7 – 9 |
-| SMA     | 10 – 12 |
+
+Mahasiswa Informatika
+
+---
+
+# 📄 License
+
+Project ini dibuat untuk keperluan pembelajaran dan pengembangan Sistem Informasi Perpustakaan.
